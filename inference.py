@@ -31,5 +31,6 @@ for button_img, button_pos in zip(button_patches, button_positions):
         button_rec = cv2.resize(button_draw, (x_max-x_min, y_max-y_min))
         img_np[y_min+6:y_max-6, x_min+6:x_max-6] = button_rec[6:-6, 6:-6]
 
+#view results
 cv2.imshow('Image',img_np)
 cv2.waitKey(0)
