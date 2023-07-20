@@ -101,7 +101,7 @@ class CharacterRecognizer:
     img_pil = Image.fromarray(image_np)
     img_show = ImageDraw.Draw(img_pil)
     font = ImageFont.truetype('./Arial.ttf', 60)
-    img_show.text((45, 60), text=text, font=font, fill=(255, 0, 255))
+    img_show.text((45, 60), text=text, font=font, fill=(0, 0, 255))
     return img_pil
 
 
