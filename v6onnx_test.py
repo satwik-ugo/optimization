@@ -9,6 +9,10 @@ from util import process_image, non_max_suppression, button_candidates
 from character_recognition import CharacterRecognizer
 recognizer = CharacterRecognizer(verbose=False)
 
+onnx_model = onnx.load('models/yolov6/best_ckpt.onnx')
+onnx.checker.check_model(onnx_model)
+ort_sess = ort.InferenceSession('models/yolov6/best_ckpt.onnx')
+
 test_paths = []
 for file_name in os.listdir("./test_imgs/"):
     test_paths.append("./test_imgs/"+file_name)
@@ -19,10 +23,6 @@ for test_path in tqdm(test_paths[0:100]):
     img_n,_ = process_image(img_np,(416,416),32,False)
     img_n = img_n.numpy()[np.newaxis]
     # print(test_path)
-    #load model
-    onnx_model = onnx.load('models/yolov6/best_ckpt.onnx')
-    onnx.checker.check_model(onnx_model)
-    ort_sess = ort.InferenceSession('models/yolov6/best_ckpt.onnx')
     preds = ort_sess.run(None, {'images': img_n})
     preds = np.array(preds)
     preds = preds.reshape(1,3549,6)
