@@ -18,7 +18,7 @@ for test_path in tqdm(test_paths[0:100]):
     img_np = cv2.imread(test_path)
     img_n,_ = process_image(img_np,(416,416),32,False)
     img_n = img_n.numpy()[np.newaxis]
-
+    # print(test_path)
     #load model
     onnx_model = onnx.load('models/yolov6/best_ckpt.onnx')
     onnx.checker.check_model(onnx_model)
@@ -35,8 +35,17 @@ for test_path in tqdm(test_paths[0:100]):
 
     button_patches, button_positions, _ = button_candidates(boxes, scores, img_np)
 
-    for button_img in button_patches:
-        # get button text and button_score for each of the images in button_patches
-        button_text, button_score, _ = recognizer.predict(button_img)
+    for button_img, button_pos in zip(button_patches, button_positions):
+        button_text, button_score, button_draw =recognizer.predict(button_img, draw=True)
+        #uncomment to visualize prediction results, note that times will not be relevant if you decide to visualize results in this script
+        # x_min, y_min, x_max, y_max = button_pos
+        # button_rec = cv2.resize(button_draw, (x_max-x_min, y_max-y_min))
+        # try:
+        #     img_np[y_min+6:y_max-6, x_min+6:x_max-6] = button_rec[6:-6, 6:-6]
+        # except:
+        #     continue
+    
+    # cv2.imshow('Image',img_np)
+    # cv2.waitKey(0)
 
-print(f"Time for 100 images (yolov6onnx + OCR) is {time.time()-st}")
+print(f"Time for 100 images (yolov6onnx + OCR) is {time.time()-st}") #comment this out if you want to visualize results
